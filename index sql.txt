@@ -1,0 +1,2 @@
+CREATE INDEX ON cis_bpdm USING gin (name gin_trgm_ops);
+CREATE INDEX ON cis_compo_bpdm USING gin (substance_name gin_trgm_ops);
