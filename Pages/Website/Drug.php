@@ -99,7 +99,17 @@ if (!empty($comments)) {
 	foreach ($comments as $comment) {
 ?>
 		<tr>
+<?php
+if ($comment["username"] == "Administrateur") {
+?>
+			<td><span style="color:#C00;font-weight:bold">Administrateur</span>
+<?php
+} else {
+?>
 			<td><?=htmlspecialchars($comment["username"])?>
+<?php
+}
+?>
 			<td><?=date("d/m/Y H:i:s", $comment["timestamp"])?>
 			<td><?=nl2br(htmlspecialchars($comment["content"]))?>
 <?php
@@ -115,5 +125,20 @@ if (!empty($comments)) {
 </div>
 <?php
 }
+?>
+<br>
+
+<h2>Médicaments liés</h2>
+<div class="list-group">
+<?php
+foreach ($allDrugs as $drug) {
+?>
+	<a href="/drug/<?=$drug["id"]?>-<?=slug($drug["name"])?>" class="list-group-item list-group-item-action<?=$match[0] == $drug["id"] ? " active" : ""?>"><?=htmlspecialchars($drug["name"])?></a>
+<?php
+}
+?>
+</div>
+
+<?php
 
 require "Pages/Website/Layout/End.php";

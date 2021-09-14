@@ -92,6 +92,52 @@ class Medicaments {
 		return $result;
 	}
 	
+	public static function getDrugsRange(int $cis) : array {
+		global $db;
+		
+		$query = $db->prepare("SELECT substance_name FROM cis_compo_bpdm WHERE cis = :cis");
+		$query->bindValue(":cis", $cis, PDO::PARAM_INT);
+		$query->execute();
+		$data = $query->fetchAll();
+		
+		if (empty($data)) {
+			return [];
+		}
+		
+		$substances = [];
+		
+		foreach ($data as $value) {
+			$query = $db->prepare("SELECT cis FROM cis_compo_bpdm WHERE substance_name = :substance_name");
+			$query->bindValue(":substance_name", $value["substance_name"], PDO::PARAM_INT);
+			$query->execute();
+			$data2 = $query->fetchAll();
+			
+			foreach ($data2 as $value2) {
+				$substances[] = $value2["cis"];
+			}
+		}
+		
+		$substances = array_unique($substances);
+		$result = [];
+		
+		
+		foreach ($substances as $substance) {
+			$query = $db->prepare("SELECT id, name FROM cis_bpdm WHERE id = :id");
+			$query->bindValue(":id", $substance, PDO::PARAM_INT);
+			$query->execute();
+			$data = $query->fetchAll();
+			
+			foreach ($data as $value) {			
+				$result[] = [
+					"id" => $value["id"],
+					"name" => $value["name"],
+				];
+			}
+		}
+		
+		return $result;
+	}
+	
 	public static function getList(int $page) : array {
 		global $db;
 		
